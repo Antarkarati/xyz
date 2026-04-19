@@ -1,0 +1,214 @@
+/**
+ * Student Class: Represents a single student entity.
+ * Holds basic information like name, id, and marks, and calculates the average.
+ */
+public class Student {
+    private String name;
+    private int id;
+    private int marks1;
+    private int marks2;
+    private int marks3;
+    private double average;
+
+    /**
+     * Constructor to initialize a Student object.
+     */
+    public Student(String name, int id, int marks1, int marks2, int marks3) {
+        this.name = name;
+        this.id = id;
+        this.marks1 = marks1;
+        this.marks2 = marks2;
+        this.marks3 = marks3;
+        this.average = calculateAverage();
+    }
+
+    /**
+     * Safely calculates the average of 3 subjects.
+     * @return the average marks
+     */
+    private double calculateAverage() {
+        return (marks1 + marks2 + marks3) / 3.0;
+    }
+
+    // Getters for accessing private fields safely
+    public String getName() { return name; }
+    public int getId() { return id; }
+    public double getAverage() { return average; }
+
+    /**
+     * Overrides the default toString method for cleaner console output.
+     */
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Id: " + id + ", Avg: " + String.format("%.2f", average);
+    }
+}
+
+
+
+
+
+import java.util.ArrayList;
+
+/**
+ * StudentService Class: Handles all business logic and operations
+ * such as finding the topper, sorting, searching, and calculating grades.
+ */
+public class StudentService {
+    
+    // ArrayList to hold the list of students dynamically
+    private ArrayList<Student> studentList = new ArrayList<>();
+
+    /**
+     * Adds a new student to the list.
+     * @param student The student object to be added
+     */
+    public void addStudent(Student student) {
+        studentList.add(student);
+    }
+
+    // Displays all students in the system
+    public void displayAllStudents() {
+        System.out.println("All Students:");
+        for (Student student : studentList) {
+            System.out.println(student.toString());
+        }
+    }
+
+    /**
+     * Finds and prints the student with the highest average score.
+     */
+    public void findTopper() {
+        if (studentList.isEmpty()) return;
+        
+        Student topper = studentList.get(0);
+        for (Student student : studentList) {
+            if (student.getAverage() > topper.getAverage()) {
+                topper = student;
+            }
+        }
+        System.out.println("Topper: " + topper.getName() + " Avg: " + String.format("%.2f", topper.getAverage()));
+    }
+
+    /**
+     * Sorts the student list by their average marks in descending order.
+     */
+    public void sortByAverage() {
+        for (int i = 0; i < studentList.size() - 1; i++) {
+            for (int j = i + 1; j < studentList.size(); j++) {
+                if (studentList.get(i).getAverage() < studentList.get(j).getAverage()) {
+                    Student temp = studentList.get(i);
+                    studentList.set(i, studentList.get(j));
+                    studentList.set(j, temp);
+                }
+            }
+        }
+        System.out.println("Sorted List:");
+        for (Student student : studentList) {
+            System.out.println(student.getName() + " " + String.format("%.2f", student.getAverage()));
+        }
+    }
+
+    /**
+     * Searches for a student by their unique ID.
+     * @param searchId The ID to search for
+     */
+    public void searchById(int searchId) {
+        boolean isFound = false;
+        for (Student student : studentList) {
+            if (student.getId() == searchId) {
+                System.out.println("Found: " + student.getName() + " Avg: " + String.format("%.2f", student.getAverage()));
+                isFound = true;
+                break;
+            }
+        }
+        if (!isFound) System.out.println("Not found");
+    }
+
+    /**
+     * Calculates and prints the letter grade for each student based on their average.
+     */
+    public void printGrades() {
+        for (Student student : studentList) {
+            String grade = "";
+            double avg = student.getAverage();
+            
+            if (avg >= 80) grade = "A+";
+            else if (avg >= 70) grade = "A";
+            else if (avg >= 60) grade = "B";
+            else if (avg >= 50) grade = "C";
+            else grade = "F";
+            
+            System.out.println(student.getName() + " Grade: " + grade);
+        }
+    }
+}
+
+
+import java.util.Scanner;
+
+/**
+ * MainApp Class: The entry point of the application.
+ * Handles user inputs and interacts with the StudentService.
+ */
+public class MainApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StudentService studentService = new StudentService();
+
+        System.out.println("Enter no. of students: ");
+        int numberOfStudents = scanner.nextInt();
+
+        // Loop to collect student details from the user
+        for (int i = 0; i < numberOfStudents; i++) {
+            System.out.println("Enter name:");
+            String name = scanner.next();
+
+            System.out.println("Enter id:");
+            int id = scanner.nextInt();
+
+            System.out.println("Enter marks of 3 subjects:");
+            int marks1 = scanner.nextInt();
+            int marks2 = scanner.nextInt();
+            int marks3 = scanner.nextInt();
+
+            // Create a Student object and pass it to the service class
+            Student newStudent = new Student(name, id, marks1, marks2, marks3);
+            studentService.addStudent(newStudent);
+        }
+
+        // Display results
+        studentService.displayAllStudents();
+        studentService.findTopper();
+
+        // Ask user if they want to sort the data
+        System.out.println("Sort by Average? y/n");
+        String sortChoice = scanner.next();
+        if (sortChoice.equals("y")) {
+            studentService.sortByAverage();
+        }
+
+        // Ask user if they want to search for a specific student
+        System.out.println("Search student by id? y/n");
+        String searchChoice = scanner.next();
+        if (searchChoice.equals("y")) {
+            System.out.println("Enter id:");
+            int searchId = scanner.nextInt();
+            studentService.searchById(searchId);
+        }
+
+        // Ask user if they want to calculate and see grades
+        System.out.println("Calculate grade? y/n");
+        String gradeChoice = scanner.next();
+        if (gradeChoice.equals("y")) {
+            studentService.printGrades();
+        }
+
+        System.out.println("Bye!");
+        scanner.close(); // Closing scanner to prevent memory leak
+    }
+}
+
+
+
+
