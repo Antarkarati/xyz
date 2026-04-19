@@ -1,0 +1,172 @@
+public class Student {
+    private String name;
+    private int id;
+    private int marks1;
+    private int marks2;
+    private int marks3;
+    private double average;
+
+    // Constructor
+    public Student(String name, int id, int marks1, int marks2, int marks3) {
+        this.name = name;
+        this.id = id;
+        this.marks1 = marks1;
+        this.marks2 = marks2;
+        this.marks3 = marks3;
+        this.average = calculateAverage();
+    }
+
+    // Private method to calculate average safely
+    private double calculateAverage() {
+        return (marks1 + marks2 + marks3) / 3.0;
+    }
+
+    // Getters
+    public String getName() { return name; }
+    public int getId() { return id; }
+    public double getAverage() { return average; }
+
+    // Task requirement: Add toString() for cleaner output
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Id: " + id + ", Avg: " + String.format("%.2f", average);
+    }
+}
+
+
+
+
+
+import java.util.ArrayList;
+
+public class StudentService {
+    // Replacing parallel arrays with an ArrayList of Student objects
+    private ArrayList<Student> studentList = new ArrayList<>();
+
+    public void addStudent(Student student) {
+        studentList.add(student);
+    }
+
+    public void displayAllStudents() {
+        System.out.println("All Students:");
+        for (Student student : studentList) {
+            System.out.println(student.toString());
+        }
+    }
+
+    public void findTopper() {
+        if (studentList.isEmpty()) return;
+        
+        Student topper = studentList.get(0);
+        for (Student student : studentList) {
+            if (student.getAverage() > topper.getAverage()) {
+                topper = student;
+            }
+        }
+        System.out.println("Topper: " + topper.getName() + " Avg: " + String.format("%.2f", topper.getAverage()));
+    }
+
+    public void sortByAverage() {
+        // Sorting the ArrayList directly using OOP concepts
+        for (int i = 0; i < studentList.size() - 1; i++) {
+            for (int j = i + 1; j < studentList.size(); j++) {
+                if (studentList.get(i).getAverage() < studentList.get(j).getAverage()) {
+                    Student temp = studentList.get(i);
+                    studentList.set(i, studentList.get(j));
+                    studentList.set(j, temp);
+                }
+            }
+        }
+        System.out.println("Sorted List:");
+        for (Student student : studentList) {
+            System.out.println(student.getName() + " " + String.format("%.2f", student.getAverage()));
+        }
+    }
+
+    public void searchById(int searchId) {
+        boolean isFound = false;
+        for (Student student : studentList) {
+            if (student.getId() == searchId) {
+                System.out.println("Found: " + student.getName() + " Avg: " + String.format("%.2f", student.getAverage()));
+                isFound = true;
+                break;
+            }
+        }
+        if (!isFound) System.out.println("Not found");
+    }
+
+    public void printGrades() {
+        for (Student student : studentList) {
+            String grade = "";
+            double avg = student.getAverage();
+            
+            if (avg >= 80) grade = "A+";
+            else if (avg >= 70) grade = "A";
+            else if (avg >= 60) grade = "B";
+            else if (avg >= 50) grade = "C";
+            else grade = "F";
+            
+            System.out.println(student.getName() + " Grade: " + grade);
+        }
+    }
+}
+
+import java.util.Scanner;
+
+public class MainApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StudentService studentService = new StudentService();
+
+        System.out.println("Enter no. of students: ");
+        int numberOfStudents = scanner.nextInt();
+
+        // Input loop creating Student objects
+        for (int i = 0; i < numberOfStudents; i++) {
+            System.out.println("Enter name:");
+            String name = scanner.next();
+
+            System.out.println("Enter id:");
+            int id = scanner.nextInt();
+
+            System.out.println("Enter marks of 3 subjects:");
+            int marks1 = scanner.nextInt();
+            int marks2 = scanner.nextInt();
+            int marks3 = scanner.nextInt();
+
+            // Creating OOP object and adding to service
+            Student newStudent = new Student(name, id, marks1, marks2, marks3);
+            studentService.addStudent(newStudent);
+        }
+
+        studentService.displayAllStudents();
+        studentService.findTopper();
+
+        System.out.println("Sort by Average? y/n");
+        String sortChoice = scanner.next();
+        if (sortChoice.equals("y")) {
+            studentService.sortByAverage();
+        }
+
+        System.out.println("Search student by id? y/n");
+        String searchChoice = scanner.next();
+        if (searchChoice.equals("y")) {
+            System.out.println("Enter id:");
+            int searchId = scanner.nextInt();
+            studentService.searchById(searchId);
+        }
+
+        System.out.println("Calculate grade? y/n");
+        String gradeChoice = scanner.next();
+        if (gradeChoice.equals("y")) {
+            studentService.printGrades();
+        }
+
+        System.out.println("Bye!");
+        scanner.close();
+    }
+}
+
+
+
+
