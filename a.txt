@@ -1,0 +1,124 @@
+import java.util.*;
+
+public class MainApp { 
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Enter no. of students: ");
+        int numberOfStudents = scanner.nextInt(); 
+        
+    
+        String studentNames[] = new String[numberOfStudents];
+        int studentIds[] = new int[numberOfStudents];
+        int marksSubject1[] = new int[numberOfStudents];
+        int marksSubject2[] = new int[numberOfStudents];
+        int marksSubject3[] = new int[numberOfStudents];
+        double averages[] = new double[numberOfStudents];
+        
+        double highestAverage = 0;
+        int topperIndex = 0;
+        
+    
+        for(int i = 0; i < numberOfStudents; i++) {
+            System.out.println("Enter name:");
+            studentNames[i] = scanner.next();
+            
+            System.out.println("Enter id:");
+            studentIds[i] = scanner.nextInt();
+            
+            System.out.println("Enter marks of 3 subjects:");
+            marksSubject1[i] = scanner.nextInt();
+            marksSubject2[i] = scanner.nextInt();
+            marksSubject3[i] = scanner.nextInt();
+            
+            averages[i] = (marksSubject1[i] + marksSubject2[i] + marksSubject3[i]) / 3.0;
+            
+          
+            if(averages[i] > highestAverage) {
+                highestAverage = averages[i];
+                topperIndex = i;
+            }
+        }
+        
+        System.out.println("All Students:");
+        for(int i = 0; i < numberOfStudents; i++) {
+            System.out.println("Name:" + studentNames[i] + " Id:" + studentIds[i] + " Avg:" + averages[i]);
+        }
+        System.out.println("Topper: " + studentNames[topperIndex] + " Avg:" + averages[topperIndex]);
+        
+    
+        System.out.println("Sort by Average? y/n");
+        String sortChoice = scanner.next(); // c থেকে sortChoice
+        
+        if(sortChoice.equals("y")) {
+            for(int i = 0; i < numberOfStudents - 1; i++) {
+                for(int j = i + 1; j < numberOfStudents; j++) {
+                    if(averages[i] < averages[j]) {
+                       
+                        String tempName = studentNames[i];
+                        studentNames[i] = studentNames[j];
+                        studentNames[j] = tempName;
+                        
+                        int tempId = studentIds[i];
+                        studentIds[i] = studentIds[j];
+                        studentIds[j] = tempId;
+                        
+                        int tempMarks1 = marksSubject1[i];
+                        marksSubject1[i] = marksSubject1[j];
+                        marksSubject1[j] = tempMarks1;
+                        
+                        int tempMarks2 = marksSubject2[i];
+                        marksSubject2[i] = marksSubject2[j];
+                        marksSubject2[j] = tempMarks2;
+                        
+                        int tempMarks3 = marksSubject3[i];
+                        marksSubject3[i] = marksSubject3[j];
+                        marksSubject3[j] = tempMarks3;
+                        
+                        double tempAverage = averages[i];
+                        averages[i] = averages[j];
+                        averages[j] = tempAverage;
+                    }
+                }
+            }
+            System.out.println("Sorted List:");
+            for(int i = 0; i < numberOfStudents; i++) {
+                System.out.println(studentNames[i] + " " + averages[i]);
+            }
+        }
+        
+        // সার্চ করার লজিক
+        System.out.println("Search student by id?");
+        String searchChoice = scanner.next(); // d থেকে searchChoice
+        
+        if(searchChoice.equals("y")) {
+            System.out.println("Enter id:");
+            int searchId = scanner.nextInt(); // sid থেকে searchId
+            boolean isFound = false; // f থেকে isFound
+            
+            for(int i = 0; i < numberOfStudents; i++) {
+                if(studentIds[i] == searchId) {
+                    System.out.println("Found:" + studentNames[i] + " Avg:" + averages[i]);
+                    isFound = true;
+                }
+            }
+            if(!isFound) System.out.println("Not found");
+        }
+        System.out.println("Calculate grade?");
+        String gradeChoice = scanner.next();
+        
+        if(gradeChoice.equals("y")) {
+            for(int i = 0; i < numberOfStudents; i++) {
+                String grade = "";
+                if(averages[i] >= 80) grade = "A+";
+                else if(averages[i] >= 70) grade = "A";
+                else if(averages[i] >= 60) grade = "B";
+                else if(averages[i] >= 50) grade = "C";
+                else grade = "F";
+                
+                System.out.println(studentNames[i] + " Grade:" + grade);
+            }
+        }
+        System.out.println("Bye!");
+    }
+}
