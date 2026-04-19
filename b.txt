@@ -1,0 +1,133 @@
+import java.util.*;
+
+public class MainApp {
+
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Enter no. of students: ");
+        int numberOfStudents = scanner.nextInt();
+        
+        String studentNames[] = new String[numberOfStudents];
+        int studentIds[] = new int[numberOfStudents];
+        int marksSubject1[] = new int[numberOfStudents];
+        int marksSubject2[] = new int[numberOfStudents];
+        int marksSubject3[] = new int[numberOfStudents];
+        double averages[] = new double[numberOfStudents];
+        
+        // Input loop
+        for(int i = 0; i < numberOfStudents; i++) {
+            System.out.println("Enter name:");
+            studentNames[i] = scanner.next();
+            
+            System.out.println("Enter id:");
+            studentIds[i] = scanner.nextInt();
+            
+            System.out.println("Enter marks of 3 subjects:");
+            marksSubject1[i] = scanner.nextInt();
+            marksSubject2[i] = scanner.nextInt();
+            marksSubject3[i] = scanner.nextInt();
+            
+            // Method call for calculating average
+            averages[i] = calculateAverage(marksSubject1[i], marksSubject2[i], marksSubject3[i]);
+        }
+        
+        System.out.println("All Students:");
+        for(int i = 0; i < numberOfStudents; i++) {
+            System.out.println("Name:" + studentNames[i] + " Id:" + studentIds[i] + " Avg:" + averages[i]);
+        }
+        
+        // Method call to find topper
+        findTopper(studentNames, averages, numberOfStudents);
+        
+        // Method call for sorting
+        System.out.println("Sort by Average? y/n");
+        String sortChoice = scanner.next();
+        if(sortChoice.equals("y")) {
+            sortByAverage(studentNames, studentIds, marksSubject1, marksSubject2, marksSubject3, averages, numberOfStudents);
+        }
+        
+        // Method call for searching
+        System.out.println("Search student by id?");
+        String searchChoice = scanner.next();
+        if(searchChoice.equals("y")) {
+            System.out.println("Enter id:");
+            int searchId = scanner.nextInt();
+            searchById(studentNames, studentIds, averages, numberOfStudents, searchId);
+        }
+        
+        // Method call for grades
+        System.out.println("Calculate grade?");
+        String gradeChoice = scanner.next();
+        if(gradeChoice.equals("y")) {
+            printGrades(studentNames, averages, numberOfStudents);
+        }
+        
+        System.out.println("Bye!");
+    }
+
+    // ==========================================
+    // Extracted Modular Methods
+    // ==========================================
+
+    public static double calculateAverage(int m1, int m2, int m3) {
+        return (m1 + m2 + m3) / 3.0;
+    }
+
+    public static void findTopper(String[] names, double[] averages, int numberOfStudents) {
+        double highestAverage = 0;
+        int topperIndex = 0;
+        
+        for(int i = 0; i < numberOfStudents; i++) {
+            if(averages[i] > highestAverage) {
+                highestAverage = averages[i];
+                topperIndex = i;
+            }
+        }
+        System.out.println("Topper: " + names[topperIndex] + " Avg:" + averages[topperIndex]);
+    }
+
+    public static void sortByAverage(String[] names, int[] ids, int[] m1, int[] m2, int[] m3, double[] averages, int numberOfStudents) {
+        for(int i = 0; i < numberOfStudents - 1; i++) {
+            for(int j = i + 1; j < numberOfStudents; j++) {
+                if(averages[i] < averages[j]) {
+                    // Swapping values
+                    String tempName = names[i]; names[i] = names[j]; names[j] = tempName;
+                    int tempId = ids[i]; ids[i] = ids[j]; ids[j] = tempId;
+                    int tempM1 = m1[i]; m1[i] = m1[j]; m1[j] = tempM1;
+                    int tempM2 = m2[i]; m2[i] = m2[j]; m2[j] = tempM2;
+                    int tempM3 = m3[i]; m3[i] = m3[j]; m3[j] = tempM3;
+                    double tempAvg = averages[i]; averages[i] = averages[j]; averages[j] = tempAvg;
+                }
+            }
+        }
+        System.out.println("Sorted List:");
+        for(int i = 0; i < numberOfStudents; i++) {
+            System.out.println(names[i] + " " + averages[i]);
+        }
+    }
+
+    public static void searchById(String[] names, int[] ids, double[] averages, int numberOfStudents, int searchId) {
+        boolean isFound = false;
+        for(int i = 0; i < numberOfStudents; i++) {
+            if(ids[i] == searchId) {
+                System.out.println("Found:" + names[i] + " Avg:" + averages[i]);
+                isFound = true;
+            }
+        }
+        if(!isFound) System.out.println("Not found");
+    }
+
+    public static void printGrades(String[] names, double[] averages, int numberOfStudents) {
+        for(int i = 0; i < numberOfStudents; i++) {
+            String grade = "";
+            if(averages[i] >= 80) grade = "A+";
+            else if(averages[i] >= 70) grade = "A";
+            else if(averages[i] >= 60) grade = "B";
+            else if(averages[i] >= 50) grade = "C";
+            else grade = "F";
+            
+            System.out.println(names[i] + " Grade:" + grade);
+        }
+    }
+}
