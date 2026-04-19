@@ -1,0 +1,35 @@
+dir 
+type filename
+cls
+cd ../
+D:
+mkdir
+git init
+git config --global user.name "name"
+git config --list
+
+ssh-keygen -t rsa -b 4096 -C "email"
+ssh -T git@github.com
+
+git add filename
+git status
+git commit -m "msg"
+git log --all --oneline
+git checkout "loc"
+
+git branch t1
+git checkout t1
+git merge t1
+
+git clone url
+git remote add origin url
+git remote -v
+git push origin (if branch)
+
+git rm -r --cached
+git rm -r --cached *.log
+
+.gitignore
+*.log
+*.txt
+!imp.log
